@@ -55,7 +55,17 @@ ui <- fluidPage(
                         min = 50,
                         max = 500,
                         value = 200,
-                        step = 50)
+                        step = 50),
+            
+            br(), br(),
+            
+            # credits for app
+            p("This app was produced by ", strong("Kim Cressman, Angela Huynh"), " and ", strong("Maple So"), " as part of a capstone project for the Colorado State University Master of Applied Statistics Program."),
+            
+            p(strong("Data source: "), a('RateBeer, ', href = 'https://www.ratebeer.com/', target = '_blank'), "specifically the ", a('SNAP dataset.', href = 'https://www.ratebeer.com/api.asp', target = '_blank'), "This is a prototype on a small subset of brewers and beers."),
+            
+            
+            p("Source code for this app can be found on ", a('github.', href = 'https://github.com/kimarsh/STAA556_ShinyApp', target = '_blank'))
             
         ),
         
@@ -113,19 +123,6 @@ ui <- fluidPage(
                                  br(), br(),
                                  plotOutput(outputId = "logodds"),
                                  br(), br()
-                        ),
-                        
-                        tabPanel("About", value = 4,
-                                 br(),
-                                 "ACTUALLY THE CREDIT STUFF SHOULD GO IN THE SIDEBAR - ONLY SUMMARY STATS HERE", br(),
-                                 "Words here", br(),
-                                 "credit and link to RateBeer and SNAP dataset", br(),
-                                 "our names and Colorado State University STAA 556, Summer 2021",
-                                 br(), br(),
-                                 "summary stats of ratebeer dataset (histogram, number of styles, number of brewers, number of beers, number of total reviews)", br(),
-                                 "how this small subset of data was chosen", br(),
-                                 "link to code on github (put code for app on github)",
-                                 br()
                         )
             )
         )
@@ -261,7 +258,7 @@ server <- function(input, output) {
         ggplot(beer_sub()) +
             geom_histogram(aes(x = overall),
                            fill = "cadetblue3",
-                           col = "gray50",
+                           col = "gray60",
                            binwidth = 1) +
             coord_cartesian(xlim = c(0, 20)) +
             labs(title = "Overall Ratings",
@@ -278,7 +275,7 @@ server <- function(input, output) {
         
         ggplot(q) +
             geom_histogram(aes(x = value, fill = char),
-                           col = "gray50",
+                           col = "gray60",
                            binwidth = 1) +
             scale_fill_brewer(palette = "Set1") +
             facet_wrap(~char, ncol = 2) +
@@ -331,8 +328,8 @@ server <- function(input, output) {
             geom_vline(xintercept = 0, col = "navy", size = 1) +
             coord_cartesian(xlim = c(-5, 5)) +
             facet_wrap(~pct_group, ncol = 1) +
-            labs(title = "AFFIN polarity scores by ratings percentile grouping",
-                 subtitle = "0 is neutral",
+            labs(title = "AFFIN polarity scores by ratings group",
+                 subtitle = "high = top 10% of overall ratings \nmid = median overall rating \nlow = bottom 10% of overall ratings",
                  x = "score",
                  y = "") +
             theme_bw() +
@@ -396,7 +393,8 @@ server <- function(input, output) {
             scale_fill_brewer(palette = "Set1") +
             facet_wrap(~pct_group, scales = "free") +
             theme_bw() +
-            labs(title = "Words most distinctive to certain groups of reviews",
+            labs(title = "Most distinctive words to each ratings group",
+                 subtitle = "high = top 10% of overall ratings \nmid = median overall rating \nlow = bottom 10% of overall ratings",
                  x = "Weighted Log-Odds Ratio", y = NULL)
     })
     
